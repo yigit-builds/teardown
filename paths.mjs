@@ -17,8 +17,12 @@ export const DEPS = process.env.TEARDOWN_DEPS || path.join(ROOT, 'node_modules')
 export const CHROMIUM = process.env.CHROMIUM || undefined;
 // Real GPU WebGL instead of a software rasteriser. On Windows d3d11 plus --force_high_performance_gpu keeps ANGLE off
 // an integrated GPU when a discrete one exists. capture.mjs prints the GPU it got on every run.
+// On Linux, headless Chromium falls back to SwiftShader (CPU) unless ANGLE is pointed at a native backend.
+// TEARDOWN_ANGLE picks it: gl (default, Mesa or vendor OpenGL), vulkan, or off for Chromium's own choice.
+const LINUX_ANGLE = process.env.TEARDOWN_ANGLE || 'gl';
 export const CHROMIUM_ARGS = [
   ...(process.platform === 'win32' ? ['--use-angle=d3d11'] : []),
+  ...(process.platform === 'linux' && LINUX_ANGLE !== 'off' ? ['--use-gl=angle', `--use-angle=${LINUX_ANGLE}`] : []),
   '--force_high_performance_gpu', '--ignore-gpu-blocklist', '--enable-gpu-rasterization', '--enable-webgl', '--hide-scrollbars',
 ];
 

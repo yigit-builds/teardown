@@ -97,6 +97,7 @@ const info = await page.evaluate((seek) => {
   };
 }, SEEK);
 console.log(`gpu: ${info.gpu}`);
+if (/swiftshader|llvmpipe/i.test(info.gpu)) console.warn('warning: software WebGL, frames render on the CPU and capture will be much slower. Check the GPU flags in paths.mjs (on Linux: TEARDOWN_ANGLE=gl|vulkan).');
 // One entry point for both contracts: a sim's SIM.render(t) or a page's seek(t).
 const draw = (t) => page.evaluate(([x, seek]) => (seek ? window.seek(x) : window.SIM.render(x)), [t, SEEK]);
 const end = Number(opt('to', info.duration));

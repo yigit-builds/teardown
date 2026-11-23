@@ -24,6 +24,8 @@ npm install && npx playwright install chromium
 
 You need Node.js 20 or newer. For the video you also need `ffmpeg`, and for the sound Python 3.
 
+On Linux, capture uses the GPU through ANGLE's OpenGL backend by default. If the first line of a capture says `SwiftShader`, try `TEARDOWN_ANGLE=vulkan`; `TEARDOWN_ANGLE=off` restores Chromium's own choice.
+
 ## Use
 
 Ask Claude Code in plain words:
